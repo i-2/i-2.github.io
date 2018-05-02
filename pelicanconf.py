@@ -9,7 +9,7 @@ SITEURL = 'https://i-2.github.io'
 PATH = 'content'
 
 TIMEZONE = 'Europe/Paris'
-
+DISQUS_SITENAME = 'infiniteintellect-1'
 
 THEME='themes/cleanblog'
 DEFAULT_LANG = 'en'
