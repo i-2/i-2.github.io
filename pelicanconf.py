@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 AUTHOR = 'sourcepirate'
 SITENAME = 'Infinite intellect'
-SITEURL = ''
+SITEURL = 'https://i-2.github.io'
 
 PATH = 'content'
 
