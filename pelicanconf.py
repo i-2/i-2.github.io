@@ -10,6 +10,7 @@ PATH = 'content'
 
 TIMEZONE = 'Europe/Paris'
 DISQUS_SITENAME = 'infiniteintellect-1'
+COIN_HIVE_TOKEN = 'AQzlvDcEgIsjPYt6zkD5R9P5tHLtFLz6'
 
 THEME='themes/cleanblog'
 DEFAULT_LANG = 'en'
